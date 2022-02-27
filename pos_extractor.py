@@ -12,15 +12,30 @@ class PosExtractor:
         self.tagger.predict(flair_sentence)
 
         print(flair_sentence)
-        nouns = []
+        all_imp_stuff = []
+        sbjs = []
+        objs = []
         verbs = []
+        prons = []
         for entity in flair_sentence.get_spans('pos'):
             pos_labels = entity.to_dict()['labels']
+            token_text = entity.to_dict()['text']
             for label in pos_labels:
-                if label.value in ['NOUN', 'PRON', 'PROPN']:
-                    nouns.append(entity.to_dict()['text'])
+                if label.value in 'PROPN':
+                    sbjs.append(token_text)
+                    all_imp_stuff.append(token_text)
+                    break
+                elif label.value in 'NOUN':
+                    objs.append(token_text)
+                    all_imp_stuff.append(token_text)
+                    break
                 elif label.value in 'VERB':
-                    verbs.append(entity.to_dict()['text'])
+                    verbs.append(token_text)
+                    all_imp_stuff.append(token_text)
+                    break
+                elif label.value in 'PRON':
+                    prons.append(token_text)
+                    all_imp_stuff.append(token_text)
+                    break
 
-        return nouns, verbs
-
+        return sbjs, objs, verbs, prons, all_imp_stuff
