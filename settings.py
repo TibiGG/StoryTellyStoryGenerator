@@ -1,0 +1,1 @@
+should_generate_new_story = False
